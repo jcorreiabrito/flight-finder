@@ -6,7 +6,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../apps/web/src/generated/prisma/client.js';
+import { PrismaClient } from '../apps/web/src/generated/prisma/client.ts';
 
 function getDatabaseUrl() {
   if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
