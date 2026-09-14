@@ -1,8 +1,22 @@
 import { readFile } from 'node:fs/promises';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import pg from 'pg';
 
-const databaseUrl = process.env.DATABASE_URL;
-if (!databaseUrl) throw new Error('DATABASE_URL is required to apply travel constraints');
+function getDatabaseUrl() {
+  if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
+  const envPath = resolve(process.cwd(), '.env');
+  if (existsSync(envPath)) {
+    try {
+      const content = readFileSync(envPath, 'utf-8');
+      const match = content.match(/^DATABASE_URL=(.+)$/m);
+      if (match) return match[1].trim().replace(/^["']|["']$/g, '');
+    } catch {}
+  }
+  return 'postgresql://postgres:postgres@localhost:5433/flight_finder';
+}
+
+const databaseUrl = getDatabaseUrl();
 const client = new pg.Client({ connectionString: databaseUrl });
 try {
   await client.connect();

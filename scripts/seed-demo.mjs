@@ -3,9 +3,26 @@
 // Run: node scripts/seed-demo.mjs
 // Clean: node scripts/seed-demo.mjs --clean
 
-import { PrismaClient } from '@prisma/client';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../apps/web/src/generated/prisma/client.js';
 
-const prisma = new PrismaClient();
+function getDatabaseUrl() {
+  if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
+  const envPath = resolve(process.cwd(), '.env');
+  if (existsSync(envPath)) {
+    try {
+      const content = readFileSync(envPath, 'utf-8');
+      const match = content.match(/^DATABASE_URL=(.+)$/m);
+      if (match) return match[1].trim().replace(/^["']|["']$/g, '');
+    } catch {}
+  }
+  return 'postgresql://postgres:postgres@localhost:5433/flight_finder';
+}
+
+const adapter = new PrismaPg({ connectionString: getDatabaseUrl() });
+const prisma = new PrismaClient({ adapter });
 
 const ROUTES = [
   {

@@ -5,17 +5,30 @@ import { defineConfig } from 'prisma/config';
 // push, migrate) reads the URL from here; the runtime PrismaClient connects via
 // the @prisma/adapter-pg driver adapter wired up in lib/prisma.ts instead.
 //
-// The caller or container supplies DATABASE_URL through the environment.
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+function getDatabaseUrl(): string | undefined {
+  if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
+
+  const envPath = resolve(process.cwd(), '.env');
+  if (existsSync(envPath)) {
+    try {
+      const content = readFileSync(envPath, 'utf-8');
+      const match = content.match(/^DATABASE_URL=(.+)$/m);
+      if (match) return match[1]!.trim().replace(/^["']|["']$/g, '');
+    } catch {}
+  }
+
+  return 'postgresql://postgres:postgres@localhost:5433/flight_finder';
+}
+
 export default defineConfig({
   schema: 'apps/web/prisma/schema.prisma',
   migrations: {
     path: 'apps/web/prisma/migrations',
   },
   datasource: {
-    // process.env (not the strict env() helper) so config-loading contexts that
-    // don't connect -- prisma generate in CI and the Docker builder -- don't
-    // throw on a missing DATABASE_URL. db push/migrate get the real value at
-    // runtime (the caller's environment or --url in the container entrypoint).
-    url: process.env.DATABASE_URL,
+    url: getDatabaseUrl(),
   },
 });
