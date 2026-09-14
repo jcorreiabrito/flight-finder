@@ -32,7 +32,8 @@
     },
     "tsup": {
       "esbuild": "0.28.2"
-    }
+    },
+    "undici": "6.21.1"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.123.0",

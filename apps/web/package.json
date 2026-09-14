@@ -34,7 +34,7 @@
     "react-plotly.js": "^4.1.0",
     "recharts": "^3.10.1",
     "ua-parser-js": "^2.0.10",
-    "undici": "^8.10.1"
+    "undici": "^6.28.1"
   },
   "devDependencies": {
     "@copilotkit/llmock": "^1.3.1",
