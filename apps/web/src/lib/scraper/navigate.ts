@@ -90,8 +90,8 @@ export function isoDate(d: Date): string {
 //   2. At least one price-shaped token (symbol or bounded code adjacent to a
 //      digit). Lookaround prevents matching "TRY" inside INDUSTRY or "EUR"
 //      inside EURO trip.
-export const CURRENCY_MENTION_PATTERN = '€|£|\\$|EUR|GBP|USD|TRY|JPY|CHF';
-export const PRICE_TOKEN_PATTERN = '(?:€|£|\\$)\\s?\\d|(?<![A-Za-z])(?:EUR|GBP|USD|TRY|JPY|CHF)(?![A-Za-z])\\s?\\d';
+export const CURRENCY_MENTION_PATTERN = '€|£|\\$|EUR|GBP|USD|TRY|JPY|CHF|BRL|R\\$';
+export const PRICE_TOKEN_PATTERN = '(?:€|£|\\$|R\\$)\\s?\\d|(?<![A-Za-z])(?:EUR|GBP|USD|TRY|JPY|CHF|BRL)(?![A-Za-z])\\s?\\d';
 export const MIN_CURRENCY_MENTIONS = 3;
 
 export function hasFlightPriceSignal(text: string): boolean {

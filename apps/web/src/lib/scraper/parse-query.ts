@@ -88,15 +88,18 @@ Multi-destination rules:
 - This generates separate searches for each origin × destination combo
 
 Multi-airport rules (same city, different airports):
-- For cities with ONE major airport (e.g. Dusseldorf, Paris), return a single-element array: [{ "code": "DUS", "name": "Dusseldorf" }]
+- For cities with ONE major airport (e.g. Dusseldorf, Paris, Brasilia, Salvador), return a single-element array: [{ "code": "DUS", "name": "Dusseldorf" }]
 - For cities with MULTIPLE major airports, list ALL relevant airports:
+  - "São Paulo" / "Sao Paulo" / "SP" → [{ "code": "GRU", "name": "São Paulo Guarulhos" }, { "code": "CGH", "name": "São Paulo Congonhas" }, { "code": "VCP", "name": "Campinas Viracopos" }]
+  - "Rio de Janeiro" / "Rio" / "RJ" → [{ "code": "SDU", "name": "Rio Santos Dumont" }, { "code": "GIG", "name": "Rio Galeão" }]
+  - "Belo Horizonte" / "BH" → [{ "code": "CNF", "name": "Belo Horizonte Confins" }, { "code": "PLU", "name": "Belo Horizonte Pampulha" }]
   - "New York" → [{ "code": "JFK", "name": "New York JFK" }, { "code": "EWR", "name": "Newark" }, { "code": "LGA", "name": "LaGuardia" }]
   - "Chicago" → [{ "code": "ORD", "name": "Chicago O'Hare" }, { "code": "MDW", "name": "Chicago Midway" }]
   - "London" → [{ "code": "LHR", "name": "London Heathrow" }, { "code": "LGW", "name": "London Gatwick" }, { "code": "STN", "name": "London Stansted" }]
   - "Tokyo" → [{ "code": "NRT", "name": "Tokyo Narita" }, { "code": "HND", "name": "Tokyo Haneda" }]
   - "Washington DC" → [{ "code": "IAD", "name": "Washington Dulles" }, { "code": "DCA", "name": "Washington Reagan" }]
   - "San Francisco Bay Area" → [{ "code": "SFO", "name": "San Francisco" }, { "code": "OAK", "name": "Oakland" }, { "code": "SJC", "name": "San Jose" }]
-- If the user specifies a SPECIFIC airport (e.g. "from JFK"), return only that one airport in the array
+- If the user specifies a SPECIFIC airport (e.g. "from JFK", "de Congonhas", "do Galeão"), return only that one airport in the array
 - Put the most common/major airport first in the array (it becomes the default)
 
 Confidence rules:
@@ -109,6 +112,7 @@ When confidence is "medium" or "low":
 - Add clear, concise clarifying questions in "ambiguities" ONLY for the unclear fields
 - Examples of good ambiguities:
   - { "field": "date", "question": "Did you mean Friday Mar 14 or Saturday Mar 15?", "options": ["Friday Mar 14", "Saturday Mar 15", "Both days"] }
+  - { "field": "origin", "question": "Which airport in São Paulo?", "options": ["GRU (Guarulhos)", "CGH (Congonhas)", "VCP (Viracopos)"] }
   - { "field": "origin", "question": "Which New York airport?", "options": ["JFK", "EWR", "LGA"] }
   - { "field": "date", "question": "That's a 30-day window. Can you narrow it to specific dates?", "options": ["First week", "Second week", "Last week"] }
   - { "field": "date", "question": "That's a 12-day outbound window. Pick a specific outbound date or narrow the range." }
@@ -128,6 +132,15 @@ Multi-date rules:
 
 Parsing rules:
 - List all major airports for multi-airport cities (see multi-airport rules above)
+- Multi-lingual: seamlessly parse Portuguese (pt-BR) and English queries:
+  - "ida e volta" / "ida e retorno" → tripType: "round_trip"
+  - "só ida" / "somente ida" / "apenas ida" → tripType: "one_way"
+  - "sem escalas" / "voo direto" → maxStops: 0
+  - "com no máximo 1 escala" / "até 1 escala" → maxStops: 1
+  - "classe executiva" → cabinClass: "business", "primeira classe" → "first", "econômica premium" → "premium_economy", "econômica" → "economy"
+  - Brazilian currencies: "R$", "reais", "BRL", "real" → currency: "BRL" (e.g. "menos de R$ 1500" or "até 2000 reais" → maxPrice: 1500, currency: "BRL")
+  - Brazilian airlines: Azul, GOL, LATAM, Voepass, TAP
+  - Brazilian holidays: resolve Carnaval, Páscoa, Tiradentes, Corpus Christi, 7 de Setembro, 12 de Outubro, Finados, Proclamação da República (15/nov), Consciência Negra (20/nov), Natal, Réveillon / Ano Novo to their target calendar dates
 - If the user says "around June 15 ± 3 days", set dateFrom to June 12, dateTo to June 18, flexibility to 3
 - If the user says "June 15-20", set dateFrom to June 15, dateTo to June 20, flexibility to 0
 - If the user says "next Friday or next Saturday", set outboundDates to both dates, dateFrom to the earlier, dateTo to the later, flexibility to 0, and confidence to "high"
@@ -137,10 +150,10 @@ Parsing rules:
 - Default timePreference to "any" unless stated
 - tripType: "one_way" if no return date is mentioned or user says "one way"; "round_trip" if a return date is given or user says "round trip" or "return". Default to "one_way" when ambiguous (no return info)
 - Extract airline preferences if mentioned
-- Extract price caps if mentioned (e.g. "under $800")
+- Extract price caps if mentioned (e.g. "under $800", "menos de R$ 2000")
 - Extract trip duration caps when phrased as "under N hours", "less than Nh", "max N hours", "duration < Nh", "shorter than N hours", "no more than Nh", or "flights shorter than N hours". Round fractional values up to whole hours. Set maxDurationHours to null if not mentioned.
 - If no stop preference stated, maxStops is null
-- Extract currency if mentioned (e.g. "in euros" → "EUR", "prices in pounds" → "GBP", "in CAD" → "CAD", "¥" → "JPY"). Set to null if not mentioned by the user. Use ISO 4217 codes.
+- Extract currency if mentioned (e.g. "in euros" → "EUR", "prices in pounds" → "GBP", "in CAD" → "CAD", "em reais" / "R$" → "BRL", "¥" → "JPY"). Set to null if not mentioned by the user. Use ISO 4217 codes.
 - Ignore trailing fragments or incomplete words at the end of the input — parse what you can
 - Today's date is ${today}
 - If this is a follow-up response to a previous question, incorporate the user's answer to refine the query

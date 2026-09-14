@@ -566,6 +566,12 @@ describe('hasFlightPriceSignal (two-criterion airline page heuristic, issue #65)
   it('accepts EUR99 (no space between code and digits)', () => {
     expect(hasFlightPriceSignal('EUR99 EUR131 EUR205')).toBe(true);
   });
+
+  it('accepts Brazilian Real prices (R$ 350, R$ 1.200, BRL 450)', () => {
+    expect(hasFlightPriceSignal('R$ 350 / R$ 450 / R$ 600')).toBe(true);
+    expect(hasFlightPriceSignal('BRL 350 / BRL 450 / BRL 600')).toBe(true);
+    expect(hasFlightPriceSignal('R$350 R$450 R$600')).toBe(true);
+  });
 });
 
 describe('buildSkyscannerUrl', () => {

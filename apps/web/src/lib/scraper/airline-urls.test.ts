@@ -159,10 +159,39 @@ describe('cabin and currency still propagate for one-way', () => {
 describe('isKnownAirline', () => {
   it('returns true for known airline', () => {
     expect(isKnownAirline('southwest')).toBe(true);
+    expect(isKnownAirline('azul')).toBe(true);
+    expect(isKnownAirline('gol')).toBe(true);
+    expect(isKnownAirline('voepass')).toBe(true);
   });
 
   it('returns true for alias', () => {
     expect(isKnownAirline('BA')).toBe(true);
+    expect(isKnownAirline('G3')).toBe(true);
+    expect(isKnownAirline('AD')).toBe(true);
+    expect(isKnownAirline('JJ')).toBe(true);
+    expect(isKnownAirline('TAM')).toBe(true);
+    expect(isKnownAirline('LATAM Brasil')).toBe(true);
+    expect(isKnownAirline('Azul Linhas Aéreas')).toBe(true);
+    expect(isKnownAirline('Gol Linhas Aéreas')).toBe(true);
+    expect(isKnownAirline('Voepass Linhas Aéreas')).toBe(true);
+    expect(isKnownAirline('TAP')).toBe(true);
+  });
+
+  it('resolves Brazilian airline URLs properly', () => {
+    const azulUrl = getAirlineUrl('Azul', baseRT)!;
+    expect(azulUrl).toContain('voeazul.com.br');
+    expect(azulUrl).toContain('JFK');
+    expect(azulUrl).toContain('LAX');
+    expect(azulUrl).toContain('2026-06-15');
+    expect(azulUrl).toContain('2026-06-22');
+
+    const golUrl = getAirlineUrl('GOL', baseRT)!;
+    expect(golUrl).toContain('voegol.com.br');
+    expect(golUrl).toContain('from=JFK');
+    expect(golUrl).toContain('to=LAX');
+
+    const latamUrl = getAirlineUrl('LATAM', baseRT)!;
+    expect(latamUrl).toContain('latamairlines.com');
   });
 
   it('returns false for unknown', () => {

@@ -136,7 +136,7 @@ function buildSystemPrompt(filters: QueryFilters, maxResults: number, source: Na
 
   const currencyInstruction = currency
     ? `- Use "${currency}" as the currency code for all results`
-    : `- Detect the currency from the page content (look for $, EUR, GBP, £, JPY, ¥ symbols or codes). Use the ISO 4217 code. If unclear, use "USD"`;
+    : `- Detect the currency from the page content (look for R$, BRL, $, EUR, GBP, £, JPY, ¥ symbols or codes). Use the ISO 4217 code. If unclear, use "BRL" or "USD"`;
 
   return `You are a flight price data extractor. Given the visible text content from ${sourceDesc}, extract the best matching flight options.
 

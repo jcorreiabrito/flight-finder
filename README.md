@@ -1,39 +1,36 @@
 <div align="center">
 
-# Flight Finder
+# Flight Finder 🇧🇷 Brasil
 
-**Flight, hotel, and car rental prices, tracked on your terms.**
+**O rastreador de preços de voos, hotéis e aluguel de carros — sob os seus termos.**  
+*Flight, hotel, and car rental prices, tracked on your terms.*
 
-Track flights, hotels, and car rentals independently in one self-hosted app.
-Open source. Use your own AI provider for natural-language requests, or search
-hotels and cars with structured forms.
+Fork otimizado para o mercado de aviação e viagens no Brasil mantido por [João Brito](https://github.com/jcorreiabrito), baseado no projeto original de [afromero/flight-finder](https://github.com/affromero/flight-finder).
 
-[![GitHub Release](https://img.shields.io/github/v/release/affromero/flight-finder)](https://github.com/affromero/flight-finder/releases/latest)
-[![CI](https://img.shields.io/github/actions/workflow/status/affromero/flight-finder/ci.yml?label=CI)](https://github.com/affromero/flight-finder/actions/workflows/ci.yml)
-[![Gitleaks](https://img.shields.io/github/actions/workflow/status/affromero/flight-finder/gitleaks.yml?branch=main&label=gitleaks&logo=github)](https://github.com/affromero/flight-finder/actions/workflows/gitleaks.yml)
-[![Docker](https://img.shields.io/badge/Docker-deployed-2496ED?logo=docker&logoColor=white)](https://github.com/affromero/flight-finder/pkgs/container/flight-finder)
-[![License: MIT](https://img.shields.io/github/license/affromero/flight-finder)](https://github.com/affromero/flight-finder/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/github/license/affromero/flight-finder)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
+[![Next.js](https://img.shields.io/badge/Next.js-15+-black?logo=next.js)](https://nextjs.org)
 [![Prisma](https://img.shields.io/badge/Prisma-7-2D3748?logo=prisma)](https://prisma.io)
-[![Socket](https://img.shields.io/badge/Socket-protected-blueviolet?logo=socket.dev)](https://socket.dev)
-[![min-release-age](https://img.shields.io/badge/min--release--age-7%20days-brightgreen)](https://docs.npmjs.com/cli/v10/using-npm/config#min-release-age)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/affromero/flight-finder/pulls)
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/afromero)
-[![self-hostable: yes](https://img.shields.io/badge/self--hostable-yes-3fa463)](#quick-start)
-[![BYOK: bring your own keys](https://img.shields.io/badge/BYOK-bring%20your%20own%20keys-c2772e)](#quick-start)
-[![agent: Claude Code / Codex](https://img.shields.io/badge/agent-Claude%20Code%20%2F%20Codex-4b5fc7)](#quick-start)
-[![AGENTS.md](https://img.shields.io/badge/AGENTS.md-7c3aed)](https://github.com/affromero/flight-finder/blob/main/AGENTS.md)
-[![LLM: 100% local capable](https://img.shields.io/badge/LLM-100%25%20local%20capable-3fa463)](#quick-start)
+[![Brazil Ready](https://img.shields.io/badge/Brasil-Otimizado-green)](#principais-otimiza%C3%A7%C3%B5es-para-o-brasil-)
 
 <br>
 
-<img src="assets/demo.gif" alt="Flight Finder -- price evolution charts cycling through JFK->CDG, LAX->NRT, ORD->FCO" width="100%">
+> 🇧🇷 **Otimizações para Voos no Brasil:**  
+> • **Companhias Aéreas Brasileiras:** Suporte direto e links de compra para **Azul**, **GOL**, **LATAM Brasil**, **Voepass** e **TAP**.  
+> • **Linguagem Natural em Português:** Entende buscas como *"São Paulo para Salvador no Carnaval"* ou *"CGH para SDU na próxima sexta voltando domingo"*.  
+> • **Feriados Nacionais Brasileiros:** Reconhecimento automático de Carnaval, Páscoa, Tiradentes, Corpus Christi, 7 de Setembro, Finados, Proclamação da República, Consciência Negra, Natal e Réveillon.  
+> • **Múltiplos Aeroportos:** Agrupamento inteligente para São Paulo (`GRU`/`CGH`/`VCP`), Rio de Janeiro (`SDU`/`GIG`), Belo Horizonte (`CNF`/`PLU`), etc.  
+> • **Moeda & Preços em Reais (`R$` / `BRL`):** Extração de preços e formatação monetária padrão brasileiro (`R$ 1.250,00`).  
+> • **Busca com/sem Acentos:** Localização instantânea de aeroportos digitando `sao paulo`, `brasilia`, `belem`, `florianopolis`, `goiania`, `maceio`, etc.
+
+<br>
+
+<img src="assets/demo.gif" alt="Flight Finder -- price evolution charts" width="100%">
 
 <details>
 <summary>CLI Demo -- headless mode with Claude Code & Codex</summary>
 <br>
-<img src="packages/cli/demo/flight-finder-demo.gif" alt="Flight Finder CLI -- search with Claude Code and Codex side by side, then live price charts" width="100%">
+<img src="packages/cli/demo/flight-finder-demo.gif" alt="Flight Finder CLI" width="100%">
 </details>
 
 <details>
@@ -41,10 +38,37 @@ hotels and cars with structured forms.
 <br>
 <img src="assets/home.png" alt="Landing page (dark)" width="100%">
 <br><br>
-<img src="assets/chart-jfk-cdg.png" alt="JFK -> CDG price chart" width="100%">
+<img src="assets/chart-jfk-cdg.png" alt="Price chart" width="100%">
 </details>
 
 </div>
+
+---
+
+## 🚀 Como Rodar Localmente (Quick Start)
+
+### Pré-requisitos
+- Node.js 20+ ou 22+
+- Docker e Docker Compose (para banco de dados PostgreSQL e Redis)
+
+```bash
+# 1. Instalar dependências
+npm install
+
+# 2. Subir o banco de dados PostgreSQL e Redis via Docker
+docker compose -f docker-compose.prod.yml up -d db redis
+
+# 3. Gerar o cliente Prisma e aplicar o schema no banco
+npm run db:push
+npx prisma generate --schema=apps/web/prisma/schema.prisma
+
+# 4. Iniciar o servidor de desenvolvimento
+npm run dev
+```
+
+Abra [http://localhost:3003](http://localhost:3003) no seu navegador.
+
+---
 
 ---
 

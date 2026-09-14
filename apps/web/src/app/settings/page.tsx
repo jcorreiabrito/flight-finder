@@ -519,9 +519,10 @@ export default function SettingsPage() {
               onChange={(e) => setDefaultCurrency(e.target.value === '_custom' ? '' : e.target.value)}
             >
               <option value="">{t('extraction.autoDetect')}</option>
-              <option value="USD">USD - US Dollar</option>
-              <option value="EUR">EUR - Euro</option>
-              <option value="GBP">GBP - British Pound</option>
+              <option value="BRL">BRL - Real Brasileiro (R$)</option>
+              <option value="USD">USD - US Dollar ($)</option>
+              <option value="EUR">EUR - Euro (€)</option>
+              <option value="GBP">GBP - British Pound (£)</option>
               <option value="JPY">JPY - Japanese Yen</option>
               <option value="CAD">CAD - Canadian Dollar</option>
               <option value="AUD">AUD - Australian Dollar</option>
@@ -529,7 +530,6 @@ export default function SettingsPage() {
               <option value="CNY">CNY - Chinese Yuan</option>
               <option value="INR">INR - Indian Rupee</option>
               <option value="MXN">MXN - Mexican Peso</option>
-              <option value="BRL">BRL - Brazilian Real</option>
               <option value="KRW">KRW - South Korean Won</option>
               <option value="SGD">SGD - Singapore Dollar</option>
               <option value="HKD">HKD - Hong Kong Dollar</option>

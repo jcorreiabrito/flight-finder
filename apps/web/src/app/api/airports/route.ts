@@ -14,6 +14,13 @@ const airports = airportsRaw as unknown as Record<string, [string, string, strin
 
 const MAX_RESULTS = 8;
 
+export function normalizeSearchText(text: string): string {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
 export async function GET(request: NextRequest) {
   const q = request.nextUrl.searchParams.get('q')?.trim();
   if (!q || q.length < 2) {
@@ -21,7 +28,7 @@ export async function GET(request: NextRequest) {
   }
 
   const upper = q.toUpperCase();
-  const lower = q.toLowerCase();
+  const normalizedQuery = normalizeSearchText(q);
   const results: AirportResult[] = [];
 
   // Exact IATA code match first
@@ -41,11 +48,13 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // City and airport name substring match
+  // City and airport name substring match (diacritics normalized)
   for (const [code, [city, name, country]] of Object.entries(airports)) {
     if (results.length >= MAX_RESULTS) break;
     if (results.some((r) => r.code === code)) continue;
-    if (city.toLowerCase().includes(lower) || name.toLowerCase().includes(lower)) {
+    const normalizedCity = normalizeSearchText(city);
+    const normalizedName = normalizeSearchText(name);
+    if (normalizedCity.includes(normalizedQuery) || normalizedName.includes(normalizedQuery)) {
       results.push({ code, city, name, country });
     }
   }

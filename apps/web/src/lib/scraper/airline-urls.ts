@@ -178,7 +178,7 @@ const AIRLINE_URL_SPECS: Record<string, AirlineSpec> = {
   },
 
   latam: {
-    base: 'https://www.latamairlines.com/us/en/booking',
+    base: 'https://www.latamairlines.com/br/pt/booking',
     origin: 'origin',
     destination: 'destination',
     departureDate: 'outbound',
@@ -191,6 +191,45 @@ const AIRLINE_URL_SPECS: Record<string, AirlineSpec> = {
     // a business/first request. LATAM's current cabin query param and value
     // set are unverified, so no replacement mapping is added here; see
     // cabin-class investigation notes for airline_direct reliability caveats.
+  },
+
+  azul: {
+    base: 'https://www.voeazul.com.br/br/pt/home/selecao-voo',
+    origin: 'origin',
+    destination: 'destination',
+    departureDate: 'departureDate',
+    returnDate: 'returnDate',
+    passengers: { key: 'adults', value: '1' },
+    tripType: {
+      oneWayKey: 'tripType',
+      oneWayValue: 'OW',
+      roundTripKey: 'tripType',
+      roundTripValue: 'RT',
+    },
+  },
+
+  gol: {
+    base: 'https://b2c.voegol.com.br/compra/busca-parceiros',
+    origin: 'from',
+    destination: 'to',
+    departureDate: 'departureDate',
+    returnDate: 'returnDate',
+    passengers: { key: 'adults', value: '1' },
+    tripType: {
+      oneWayKey: 'tripType',
+      oneWayValue: 'one-way',
+      roundTripKey: 'tripType',
+      roundTripValue: 'round-trip',
+    },
+  },
+
+  voepass: {
+    base: 'https://www.voepass.com.br/empresa/site/compra',
+    origin: 'origin',
+    destination: 'destination',
+    departureDate: 'departureDate',
+    returnDate: 'returnDate',
+    passengers: { key: 'adults', value: '1' },
   },
 
   copa: {
@@ -209,6 +248,15 @@ const AIRLINE_URL_SPECS: Record<string, AirlineSpec> = {
     departureDate: 'departure',
     returnDate: 'return',
     passengers: { key: 'passengers', value: '1' },
+  },
+
+  'tap air portugal': {
+    base: 'https://www.flytap.com/pt-br/booking/flights',
+    origin: 'origin',
+    destination: 'destination',
+    departureDate: 'departureDate',
+    returnDate: 'returnDate',
+    passengers: { key: 'adults', value: '1' },
   },
 
   // Europe
@@ -403,6 +451,36 @@ const ALIASES: Record<string, string> = {
   tk: 'turkish airlines',
   av: 'avianca',
   la: 'latam',
+  jj: 'latam',
+  tam: 'latam',
+  'latam brasil': 'latam',
+  'latam brazil': 'latam',
+  'latam airlines brasil': 'latam',
+  'latam airlines': 'latam',
+  ad: 'azul',
+  azu: 'azul',
+  'azul linhas aéreas': 'azul',
+  'azul linhas aereas': 'azul',
+  'azul brazilian airlines': 'azul',
+  'voe azul': 'azul',
+  voeazul: 'azul',
+  g3: 'gol',
+  glo: 'gol',
+  'gol linhas aéreas': 'gol',
+  'gol linhas aereas': 'gol',
+  'gol transportes aéreos': 'gol',
+  'gol transportes aereos': 'gol',
+  'gol airlines': 'gol',
+  'voe gol': 'gol',
+  voegol: 'gol',
+  '2z': 'voepass',
+  ptb: 'voepass',
+  passaredo: 'voepass',
+  'voepass linhas aéreas': 'voepass',
+  'voepass linhas aereas': 'voepass',
+  tp: 'tap air portugal',
+  tap: 'tap air portugal',
+  'tap portugal': 'tap air portugal',
   cm: 'copa',
   am: 'aeromexico',
   fr: 'ryanair',
